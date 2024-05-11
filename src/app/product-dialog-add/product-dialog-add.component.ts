@@ -36,7 +36,7 @@ export class ProductDialogAdd implements OnChanges {
   }
 
   formGroupSchema = Joi.object({
-    id: Joi.string().optional(),
+    id: Joi.optional(),
     handle: Joi.string().required(),
     title: Joi.string().required(),
     description: Joi.string().required(),
@@ -49,7 +49,7 @@ export class ProductDialogAdd implements OnChanges {
   })
   formGroup = this.fb.group(
     {
-      id: '',
+      id: [''],
       handle: [''],
       title: [''],
       description: [''],
@@ -131,17 +131,18 @@ export class ProductDialogAdd implements OnChanges {
       this.productsService.edit(this.formGroup.value as IProduct).subscribe({
         next: (product) => {
           this.editProdct(product)
-          this.showModal = false
+          this.handleTogleModal()
           this.formGroup.reset()
         },
         error: (err) => console.log(err),
       })
     } else {
       // when action is create
+      delete this.formGroup.value.id
       this.productsService.create(this.formGroup.value as IProduct).subscribe({
         next: (product) => {
-          this.addNewProduct(product)
-          this.showModal = false
+          this.addNewProduct({ ...product })
+          this.handleTogleModal()
           this.formGroup.reset()
         },
         error: (err) => console.log(err),
