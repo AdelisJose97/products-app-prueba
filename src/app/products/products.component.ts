@@ -77,7 +77,11 @@ export class ProductsComponent implements OnInit {
       next: (products) => {
         this.products = products
       },
-      error: (err) => (this.errorMessage = err),
+      error: (err) => {
+        const token = localStorage.getItem('access_token')
+        if (!token) this.signOut()
+        this.errorMessage = err
+      },
     })
   }
 }

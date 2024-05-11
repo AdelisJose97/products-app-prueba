@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http'
 import { throwError } from 'rxjs'
+import { Router } from '@angular/router'
 
 export function handleError(error: HttpErrorResponse) {
   if (error.status === 0) {
@@ -8,6 +9,9 @@ export function handleError(error: HttpErrorResponse) {
   } else {
     // The backend returned an unsuccessful response code.
     // The response body may contain clues as to what went wrong.
+    if (error.status === 401) {
+      localStorage.removeItem('access_token')
+    }
     console.error(
       `Backend returned code ${error.status}, body was: `,
       error.error
